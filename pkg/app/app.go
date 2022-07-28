@@ -65,6 +65,13 @@ func loggingMiddleware(handler http.Handler) http.Handler {
 	})
 }
 
+func versionMiddleware(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("X-Kuard-Version", version.VERSION)
+		handler.ServeHTTP(w, r)
+	})
+}
+
 type pageContext struct {
 	URLBase      string       `json:"urlBase"`
 	Hostname     string       `json:"hostname"`
@@ -134,7 +141,7 @@ func fileExists(name string) bool {
 }
 
 func (k *App) Run() {
-	r := promMiddleware(loggingMiddleware(k.r))
+	r := promMiddleware(loggingMiddleware(versionMiddleware(k.r)))
 
 	// Look to see if we can find TLS certs
 	certFile := filepath.Join(k.c.TLSDir, "kuard.crt")
