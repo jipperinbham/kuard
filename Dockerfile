@@ -1,22 +1,24 @@
 # STAGE 1: Build
-FROM golang:1.12-alpine AS build
+FROM golang:1.18-alpine AS build
 
 # Install Node and NPM.
 RUN apk update && apk upgrade && apk add --no-cache git nodejs bash npm
 
 # Get dependencies for Go part of build
-RUN go get -u github.com/jteeuwen/go-bindata/...
+RUN go install github.com/go-bindata/go-bindata/go-bindata@latest
 
 WORKDIR /go/src/github.com/kubernetes-up-and-running/kuard
 
 # Copy all sources in
 COPY . .
 
+ARG version=test
+
 # This is a set of variables that the build script expects
 ENV VERBOSE=0
 ENV PKG=github.com/kubernetes-up-and-running/kuard
 ENV ARCH=amd64
-ENV VERSION=test
+ENV VERSION=$version
 
 # When running on Windows 10, you need to clean up the ^Ms in the script
 RUN dos2unix build/build.sh

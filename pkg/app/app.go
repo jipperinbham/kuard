@@ -176,6 +176,9 @@ func NewApp() *App {
 		router.GET(prefix+"/-/*path", rootHandler)
 
 		router.Handler("GET", prefix+"/metrics", prometheus.Handler())
+		router.Handler(http.MethodGet, prefix+"/exit", http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {
+			os.Exit(1)
+		}))
 
 		// Add the static files
 		sitedata.AddRoutes(router, prefix+"/built")

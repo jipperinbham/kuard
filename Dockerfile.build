@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.12-alpine
+FROM golang:1.18-alpine
 
 # We aren't using the /go directory defined in base image
 WORKDIR /data
@@ -32,5 +32,4 @@ RUN apk update && apk upgrade && apk add --no-cache git nodejs bash npm
 
 # Install any binaries in to /usr/local/bin instead of /go/bin as we will mask
 # /go/bin when doing real builds.
-RUN GOPATH=/tmp GOBIN=/usr/local/bin go get -u github.com/jteeuwen/go-bindata/...
-RUN GOPATH=/tmp GOBIN=/usr/local/bin go get github.com/tools/godep
+RUN go install github.com/go-bindata/go-bindata/go-bindata@latest
