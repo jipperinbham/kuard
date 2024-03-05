@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.18-alpine
+FROM golang:1.22-alpine
 
 # We aren't using the /go directory defined in base image
 WORKDIR /data
 ENV HOME /data
-ENV GOPATH /data/go
 
 ENV npm_config_cache=/data/npm_cache
 

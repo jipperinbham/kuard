@@ -72,12 +72,15 @@ func (e *DNSAPI) APIGet(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 }
 
 func dnsQuery(t string, name string) (string, error) {
-	config, err := dns.ClientConfigFromFile("/etc/resolv.conf")
+	config, err := ClientConfigFromFile("/etc/resolv.conf")
 	if err != nil {
 		return "", err
 	}
 
 	c := new(dns.Client)
+	if config.UseVC {
+		c.Net = "tcp"
+	}
 	m := new(dns.Msg)
 
 	qtype, ok := dns.StringToType[strings.ToUpper(t)]

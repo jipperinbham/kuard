@@ -1,6 +1,6 @@
 module github.com/kubernetes-up-and-running/kuard
 
-go 1.18
+go 1.22
 
 require (
 	github.com/dustin/go-humanize v1.0.0

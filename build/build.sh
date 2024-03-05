@@ -40,18 +40,19 @@ if [ -z "${VERSION}" ]; then
 fi
 
 export CGO_ENABLED=0
-export GOARCH="${ARCH}"
-export GO111MODULE=on
+export GOARCH="amd64"
+export GOOS="linux"
 
 (
   cd client
-  npm install --loglevel=error
-  npm run build
+  NODE_OPTIONS="--openssl-legacy-provider" npm install --loglevel=error
+  NODE_OPTIONS="--openssl-legacy-provider" npm run build
 )
 
 go generate ${GO_FLAGS} ./cmd/... ./pkg/...
-go install                                                         \
+go build                                                         \
     ${GO_FLAGS}                                                    \
     -installsuffix "static"                                        \
     -ldflags "-X ${PKG}/pkg/version.VERSION=${VERSION}"            \
+    -o "$GOPATH/bin/kuard"                                         \
     ./cmd/...
